@@ -1,26 +1,18 @@
 # Receipt Intelligence Platform
 
-**One dataset. Six engineering projects. One shared data layer.**
+Since September 2025 I've been photographing paper receipts from shopping trips around Ilorin, Nigeria. This is a small platform that turns that growing pile of photos into a structured, queryable record of what I've bought, where, and when — built as a set of focused services that share one core data layer.
 
-Since September 2025, I've been photographing shopping receipts from stores around Ilorin, Nigeria. This repo is the front door to a series of standalone projects built on that dataset — each one demonstrating a distinct engineering skill, from data pipelines to applied ML, all sharing a single underlying data platform.
+## The repos
 
-Built by [Muiz Haruna](https://github.com/devdesiignn), September–December 2026 ("engineering season").
-
-## Why this exists
-
-This is structured the way real platforms are: one core data service, several applications built on top of it. Each repo below is independently reviewable, and together they share a single data layer instead of duplicating it six times.
-
-## The Repos
-
-| # | Repo | What it demonstrates |
+| # | Repo | What it does |
 |---|---|---|
-| — | [`receipt-core`](https://github.com/devdesiignn/receipt-core) | Shared schema, migrations, and data-model ownership — the contract every other project depends on |
-| 1 | [`receipt-etl`](https://github.com/devdesiignn/receipt-etl) | Image → structured data: extraction, validation, confidence scoring, manual-review path for messy real input |
-| 2 | [`receipt-api`](https://github.com/devdesiignn/receipt-api) | REST API + dashboard on top of the core data |
-| 3 | [`receipt-search`](https://github.com/devdesiignn/receipt-search) | Embeddings + semantic search over purchases |
-| 4 | [`receipt-agent`](https://github.com/devdesiignn/receipt-agent) | Conversational AI agent that routes between structured and semantic queries |
-| 5 | [`receipt-forecast`](https://github.com/devdesiignn/receipt-forecast) | Applied ML — purchase forecasting and spending anomaly detection |
-| 6 | [`receipt-infra`](https://github.com/devdesiignn/receipt-infra) | Containerization, CI/CD, and monitoring across the whole series |
+| — | [`receipt-core`](https://github.com/devdesiignn/receipt-core) | Shared schema, migrations, and data model — the contract every other service depends on |
+| 1 | [`receipt-etl`](https://github.com/devdesiignn/receipt-etl) | Turns receipt photos into structured, validated data: extraction, confidence scoring, and a manual-review path for anything the pipeline isn't confident about |
+| 2 | [`receipt-api`](https://github.com/devdesiignn/receipt-api) | REST API and dashboard for browsing and querying the data |
+| 3 | [`receipt-search`](https://github.com/devdesiignn/receipt-search) | Semantic search over purchases — find things by meaning, not just exact wording |
+| 4 | [`receipt-agent`](https://github.com/devdesiignn/receipt-agent) | Conversational interface for asking questions about spending; routes between structured queries and semantic search |
+| 5 | [`receipt-forecast`](https://github.com/devdesiignn/receipt-forecast) | Purchase forecasting and spending anomaly detection |
+| 6 | [`receipt-infra`](https://github.com/devdesiignn/receipt-infra) | Containerization, CI/CD, and monitoring for the whole set |
 
 *(Repo links go live as each project is built — this table is the map, not a promise everything's already up.)*
 
@@ -49,11 +41,17 @@ This is structured the way real platforms are: one core data service, several ap
 
 `receipt-etl` writes into the shared data entities; `receipt-api`, `receipt-search`, `receipt-agent`, and `receipt-forecast` all read from them (directly or via `receipt-api`). `receipt-agent` also calls into `receipt-api` and `receipt-search` rather than touching the database directly.
 
-## Scope, deliberately
+## Scope, on purpose
 
-- **v1 covers printed receipts only.** POS screenshots and handwritten market-list receipts are real source types in the data but are explicitly out of scope for v1 — noted as a v2 backlog item, not built. `receipt-etl`'s architecture uses an extractor pattern so new source types can be added later without changing the shared schema.
-- Every project repo states what it does **not** do, as clearly as what it does. Deliberate scoping is treated as a feature of this series, not a shortcut.
-- Each project repo documents the concrete real-input challenge it faced and how it handled it — not idealized demo data.
+- **v1 covers printed receipts only.** POS screenshots and handwritten market-list receipts exist in the source photos but are explicitly out of scope for v1. `receipt-etl` uses an extractor pattern so new source types can be added later without changing the shared schema.
+- Every repo states what it does **not** do, as clearly as what it does.
+- Each repo documents the concrete messy-input problem it ran into and how it was handled.
+
+## Data and privacy
+
+The underlying photos are my own receipts and contain real purchase history and store locations. None of that goes into the public repos as-is:
+- Sample/seed data in each repo is synthetic or redacted, generated to match the real schema and its rough statistical shape.
+- `receipt-etl` redacts personal details (names, card numbers, exact addresses) as part of the extraction pipeline, before data reaches storage.
 
 ## Timeline
 
@@ -64,10 +62,10 @@ Sept 2026 – Dec 2026, roughly:
 | 1–4 | `receipt-core` schema + `receipt-etl` (extraction, confidence scoring, manual review) |
 | 5–7 | `receipt-api` (backend + dashboard) |
 | 8–9 | `receipt-search` (semantic search) |
-| 10–12 | `receipt-agent` (AI agent) |
-| 13–14 | `receipt-forecast` (ML) |
+| 10–12 | `receipt-agent` (conversational agent) |
+| 13–14 | `receipt-forecast` (forecasting/anomaly detection) |
 | 15–16 | `receipt-infra` + polish across all repos |
 
 ## Full write-up
 
-The complete master plan — architecture decisions, tradeoffs, and reasoning behind the repo split — lives in [`docs/master-plan.md`](docs/master-plan.md) in this repo.
+The complete plan — architecture decisions, tradeoffs, and reasoning behind the repo split — lives in [`docs/master-plan.md`](docs/master-plan.md) in this repo.
