@@ -19,7 +19,13 @@
     "type": "git",
     "url": "git+https://github.com/devdesiignn/receipt-intelligence-platform.git"
   },
+  "keywords": [],
+  "author": "",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/devdesiignn/receipt-intelligence-platform/issues"
+  },
+  "homepage": "https://github.com/devdesiignn/receipt-intelligence-platform#readme",
   "devDependencies": {
     "husky": "^9.1.7",
     "lint-staged": "^17.5.1",
