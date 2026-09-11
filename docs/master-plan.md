@@ -16,7 +16,7 @@ One dataset — receipt photos collected since September 2025 — feeds six inde
 
 ## 3. Shared architecture
 
-```
+```text
                          ┌─────────────────────────┐
                          │   Core Data Service      │
                          │  (Postgres + migrations) │
@@ -57,15 +57,15 @@ Each repo gets its own README with a problem statement, architecture, and a link
 
 ## 5. Timeline (Sept 7 – Dec 31, ~16 weeks)
 
-| Weeks | Focus | Why this order |
-|---|---|---|
-| 1–2 | `receipt-core` schema design + P1 (ETL/extraction) build | Foundation — nothing else can start without structured data landing somewhere |
-| 3–4 | P1 hardening: confidence scoring, manual-review UI, currency/date normalization, anonymization | Where the real-data messiness and privacy handling both get resolved |
-| 5–7 | P2: API + Dashboard | Standard full-stack layer; also becomes the "ground truth" UI used to sanity-check later projects |
-| 8–9 | P3: Search & Retrieval | Embeddings/vector search, self-contained, moderate lift |
-| 10–12 | P4: AI Agent | The most complex piece — benefits from P2 and P3 already existing to call into |
-| 13–14 | P5: Forecasting/Anomaly Detection | Smaller, focused project, good pace change after the agent |
-| 15–16 | P6: Infra/Ops layer applied across all repos + writeups | Dockerize, add CI/CD and monitoring retroactively across the set; polish READMEs |
+| Weeks | Focus                                                                                          | Why this order                                                                                    |
+| ----- | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| 1–2   | `receipt-core` schema design (done) + P1 (ETL/extraction) build                                | Foundation — nothing else can start without structured data landing somewhere                     |
+| 3–4   | P1 hardening: confidence scoring, manual-review UI, currency/date normalization, anonymization | Where the real-data messiness and privacy handling both get resolved                              |
+| 5–7   | P2: API + Dashboard                                                                            | Standard full-stack layer; also becomes the "ground truth" UI used to sanity-check later projects |
+| 8–9   | P3: Search & Retrieval                                                                         | Embeddings/vector search, self-contained, moderate lift                                           |
+| 10–12 | P4: AI Agent                                                                                   | The most complex piece — benefits from P2 and P3 already existing to call into                    |
+| 13–14 | P5: Forecasting/Anomaly Detection                                                              | Smaller, focused project, good pace change after the agent                                        |
+| 15–16 | P6: Infra/Ops layer applied across all repos + writeups                                        | Dockerize, add CI/CD and monitoring retroactively across the set; polish READMEs                  |
 
 Not rigid — P3/P4/P5 can reorder or run partially in parallel if one stalls. P1 and P2 are the only hard prerequisites.
 

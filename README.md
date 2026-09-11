@@ -4,21 +4,21 @@ Since September 2025 I've been photographing paper receipts from shopping trips 
 
 ## The repos
 
-| # | Repo | What it does |
-|---|---|---|
-| — | [`receipt-core`](https://github.com/devdesiignn/receipt-core) | Shared schema, migrations, and data model — the contract every other service depends on |
-| 1 | [`receipt-etl`](https://github.com/devdesiignn/receipt-etl) | Turns receipt photos into structured, validated data: extraction, confidence scoring, and a manual-review path for anything the pipeline isn't confident about |
-| 2 | [`receipt-api`](https://github.com/devdesiignn/receipt-api) | REST API and dashboard for browsing and querying the data |
-| 3 | [`receipt-search`](https://github.com/devdesiignn/receipt-search) | Semantic search over purchases — find things by meaning, not just exact wording |
-| 4 | [`receipt-agent`](https://github.com/devdesiignn/receipt-agent) | Conversational interface for asking questions about spending; routes between structured queries and semantic search |
-| 5 | [`receipt-forecast`](https://github.com/devdesiignn/receipt-forecast) | Purchase forecasting and spending anomaly detection |
-| 6 | [`receipt-infra`](https://github.com/devdesiignn/receipt-infra) | Containerization, CI/CD, and monitoring for the whole set |
+| #   | Repo                                                                  | What it does                                                                                                                                                   |
+| --- | --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| —   | [`receipt-core`](https://github.com/devdesiignn/receipt-core)         | Shared schema, migrations, and data model — the contract every other service depends on                                                                        |
+| 1   | [`receipt-etl`](https://github.com/devdesiignn/receipt-etl)           | Turns receipt photos into structured, validated data: extraction, confidence scoring, and a manual-review path for anything the pipeline isn't confident about |
+| 2   | [`receipt-api`](https://github.com/devdesiignn/receipt-api)           | REST API and dashboard for browsing and querying the data                                                                                                      |
+| 3   | [`receipt-search`](https://github.com/devdesiignn/receipt-search)     | Semantic search over purchases — find things by meaning, not just exact wording                                                                                |
+| 4   | [`receipt-agent`](https://github.com/devdesiignn/receipt-agent)       | Conversational interface for asking questions about spending; routes between structured queries and semantic search                                            |
+| 5   | [`receipt-forecast`](https://github.com/devdesiignn/receipt-forecast) | Purchase forecasting and spending anomaly detection                                                                                                            |
+| 6   | [`receipt-infra`](https://github.com/devdesiignn/receipt-infra)       | Containerization, CI/CD, and monitoring for the whole set                                                                                                      |
 
-*(Repo links go live as each project is built — this table is the map, not a promise everything's already up.)*
+_**(Repo links go live as each project is built — this table is the map, not a promise everything's already up.)**_
 
 ## Architecture
 
-```
+```text
                          ┌─────────────────────────┐
                          │      receipt-core       │
                          │  (shared data entities)  │
@@ -50,6 +50,7 @@ Since September 2025 I've been photographing paper receipts from shopping trips 
 ## Data and privacy
 
 The underlying photos are my own receipts and contain real purchase history and store locations. None of that goes into the public repos as-is:
+
 - Sample/seed data in each repo is synthetic or redacted, generated to match the real schema and its rough statistical shape.
 - `receipt-etl` redacts personal details (names, card numbers, exact addresses) as part of the extraction pipeline, before data reaches storage.
 
@@ -57,14 +58,14 @@ The underlying photos are my own receipts and contain real purchase history and 
 
 Sept 2026 – Dec 2026, roughly:
 
-| Weeks | Focus |
-|---|---|
-| 1–4 | `receipt-core` schema + `receipt-etl` (extraction, confidence scoring, manual review) |
-| 5–7 | `receipt-api` (backend + dashboard) |
-| 8–9 | `receipt-search` (semantic search) |
-| 10–12 | `receipt-agent` (conversational agent) |
-| 13–14 | `receipt-forecast` (forecasting/anomaly detection) |
-| 15–16 | `receipt-infra` + polish across all repos |
+| Weeks | Focus                                                                                        |
+| ----- | -------------------------------------------------------------------------------------------- |
+| 1–4   | `receipt-core` schema (done) + `receipt-etl` (extraction, confidence scoring, manual review) |
+| 5–7   | `receipt-api` (backend + dashboard)                                                          |
+| 8–9   | `receipt-search` (semantic search)                                                           |
+| 10–12 | `receipt-agent` (conversational agent)                                                       |
+| 13–14 | `receipt-forecast` (forecasting/anomaly detection)                                           |
+| 15–16 | `receipt-infra` + polish across all repos                                                    |
 
 ## Full write-up
 
