@@ -1,0 +1,29 @@
+{
+  "name": "receipt-intelligence-platform",
+  "version": "1.0.0",
+  "description": "Docs-only hub repo for the Receipt Intelligence Platform — system plan and architecture diagram.",
+  "private": true,
+  "scripts": {
+    "lint": "markdownlint README.md CLAUDE.md docs/*.md",
+    "format": "prettier --write \"*.md\" \"docs/*.md\"",
+    "format:check": "prettier --check \"*.md\" \"docs/*.md\"",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.md": [
+      "markdownlint --fix",
+      "prettier --write"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devdesiignn/receipt-intelligence-platform.git"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^17.5.1",
+    "markdownlint-cli": "^0.45.0",
+    "prettier": "^3.9.6"
+  }
+}

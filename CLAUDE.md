@@ -4,9 +4,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repo is
 
-`receipt-intelligence-platform` is a **docs-only hub repo** — it contains no application code, build system, or tests. It holds the system-level plan and architecture diagram for a multi-repo platform; the actual services live in separate sibling repos (not present here).
+`receipt-intelligence-platform` is a **docs-only hub repo** — it contains no application code. It holds the system-level plan and architecture diagram for a multi-repo platform; the actual services live in separate sibling repos (not present here).
 
-There is nothing to build, lint, or test in this repo. Work here is limited to editing `README.md` and `docs/master-plan.md`.
+There is nothing to build or test in this repo. Work here is limited to editing `README.md` and `docs/master-plan.md`, plus the markdown tooling described below.
+
+## Markdown tooling
+
+This repo has a small Node toolchain scoped to linting/formatting markdown only:
+
+- `npm install` — installs Prettier, markdownlint-cli, husky, lint-staged.
+- `npm run format` / `npm run format:check` — Prettier over `*.md` and `docs/*.md`. Prettier owns table formatting (padded pipes) and general markdown style.
+- `npm run lint` — markdownlint over the same files, for structural/style issues Prettier doesn't fix (e.g. missing code-fence language, heading structure). Config is `.markdownlint.json`; MD060 (table pipe style) is disabled there since it conflicts with Prettier's table output — don't re-enable it without also matching Prettier's style.
+- A husky pre-commit hook runs `lint-staged` (markdownlint --fix + prettier --write on staged `.md` files), so contributors get the same checks locally before a commit lands.
+- `node_modules/` is gitignored — never commit it.
 
 ## The platform this repo describes
 
