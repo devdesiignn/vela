@@ -49,10 +49,11 @@ _**(Repo links go live as each project is built — this table is the map, not a
 
 ## Data and privacy
 
-The underlying photos are my own receipts and contain real purchase history and store locations. None of that goes into the public repos as-is:
+The database is private and not shared or published. The photos it's built from contain real purchase history and store details, but the stored data is limited by schema design:
 
-- Sample/seed data in each repo is synthetic or redacted, generated to match the real schema and its rough statistical shape.
-- `receipt-etl` redacts personal details (names, card numbers, exact addresses) as part of the extraction pipeline, before data reaches storage.
+- `receipt-core`'s schema defines required, common, and rare fields based on analysis of real sample receipts. `receipt-etl` extracts only what the schema defines — nothing else is captured or retained. Rare, store-specific fields go into a structured `extras` field rather than open-ended storage.
+- Raw source photos are referenced by ID from the database but stored separately, outside `receipt-core`.
+- Sample/seed data in each public repo is synthetic — generated with Faker to match the schema's shape and statistical patterns, not derived from or redacted from real receipts.
 
 ## Timeline
 
