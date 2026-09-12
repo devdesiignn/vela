@@ -8,7 +8,7 @@ Since September 2025 I've been photographing paper receipts from shopping trips 
 | --- | --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | —   | [`receipt-core`](https://github.com/devdesiignn/receipt-core)         | Shared schema, migrations, and data model — the contract every other service depends on                                                                        |
 | 1   | [`receipt-etl`](https://github.com/devdesiignn/receipt-etl)           | Turns receipt photos into structured, validated data: extraction, confidence scoring, and a manual-review path for anything the pipeline isn't confident about |
-| 2   | [`receipt-api`](https://github.com/devdesiignn/receipt-api)           | REST API and dashboard for browsing and querying the data                                                                                                      |
+| 2   | [`receipt-api`](https://github.com/devdesiignn/receipt-api)           | REST API and dashboard for browsing and querying the data — the only service with a direct connection to `receipt-core`                                        |
 | 3   | [`receipt-search`](https://github.com/devdesiignn/receipt-search)     | Semantic search over purchases — find things by meaning, not just exact wording                                                                                |
 | 4   | [`receipt-agent`](https://github.com/devdesiignn/receipt-agent)       | Conversational interface for asking questions about spending; routes between structured queries and semantic search                                            |
 | 5   | [`receipt-forecast`](https://github.com/devdesiignn/receipt-forecast) | Purchase forecasting and spending anomaly detection                                                                                                            |
@@ -28,18 +28,25 @@ _**(Repo links go live as each project is built — this table is the map, not a
                          │  extraction_reviews      │
                          └────────────┬─────────────┘
                                       │
-        ┌───────────────┬────────────┼────────────┬───────────────┐
-        │               │            │             │               │
-   ┌────▼────┐    ┌─────▼─────┐ ┌────▼─────┐ ┌─────▼──────┐  ┌─────▼─────┐
-   │ receipt-│    │ receipt-  │ │ receipt- │ │ receipt-   │  │ receipt-  │
-   │  etl    │    │  api      │ │  search  │ │  agent     │  │  forecast │
-   └─────────┘    └───────────┘ └──────────┘ └────────────┘  └───────────┘
+                         ┌────────────▼─────────────┐
+                         │       receipt-api        │
+                         │  (write contract + reads) │
+                         └────────────┬─────────────┘
+                                      │
+                 ┌───────────────┬────┴───────┬───────────────┐
+                 │               │            │               │
+            ┌────▼────┐    ┌─────▼─────┐ ┌────▼─────┐  ┌─────▼─────┐
+            │ receipt-│    │ receipt-  │ │ receipt- │  │ receipt-  │
+            │  etl    │    │  search   │ │  agent   │  │  forecast │
+            └─────────┘    └───────────┘ └──────────┘  └───────────┘
 
                     receipt-infra — wraps all of the above
               (Docker, CI/CD, monitoring, async queue)
 ```
 
-`receipt-etl` writes into the shared data entities; `receipt-api`, `receipt-search`, `receipt-agent`, and `receipt-forecast` all read from them (directly or via `receipt-api`). `receipt-agent` also calls into `receipt-api` and `receipt-search` rather than touching the database directly.
+`receipt-api` is the only service with a direct connection to `receipt-core`. Everything else reaches the data by calling `receipt-api`: `receipt-etl` calls it to write newly extracted receipts and to resolve flagged reviews, `receipt-search`, `receipt-agent`, and `receipt-forecast` call it to read. `receipt-agent` also calls into `receipt-search` directly for semantic queries.
+
+`receipt-etl` is built first (against `receipt-api`'s OpenAPI spec and a mock server standing in for it), with `receipt-api`'s real implementation following — full reasoning in `docs/master-plan.md`.
 
 ## Scope, on purpose
 
