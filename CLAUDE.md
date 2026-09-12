@@ -25,14 +25,14 @@ One shared dataset (photographed paper receipts) feeds six independent, separate
 | Repo                    | Role                                                                                                                                                        |
 | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `receipt-core`          | Shared schema, migrations, data model — the contract every other service depends on                                                                         |
-| `receipt-etl` (P1)      | Photo → structured, validated, confidence-scored, anonymized data; manual-review path for low-confidence extractions                                        |
-| `receipt-api` (P2)      | REST API + dashboard for browsing/querying the data                                                                                                         |
+| `receipt-etl` (P1)      | Photo → structured, validated, confidence-scored data; manual-review path for low-confidence extractions; writes via `receipt-api`, not directly to the database |
+| `receipt-api` (P2)      | REST API + dashboard for browsing/querying the data — the only service with a direct connection to `receipt-core`                                          |
 | `receipt-search` (P3)   | Semantic search over purchases                                                                                                                              |
 | `receipt-agent` (P4)    | Conversational Q&A; routes between structured queries (via `receipt-api`) and semantic search (via `receipt-search`) — does not touch the database directly |
 | `receipt-forecast` (P5) | Purchase forecasting and spend anomaly detection                                                                                                            |
 | `receipt-infra` (P6)    | Docker Compose, CI/CD, monitoring wrapping all of the above                                                                                                 |
 
-Data flow: `receipt-etl` writes into the shared entities (`stores`, `receipts`, `line_items`, `extraction_reviews`); `receipt-api`, `receipt-search`, `receipt-agent`, and `receipt-forecast` all read from them, either directly or via `receipt-api`.
+Data flow: `receipt-api` is the only service with a direct connection to `receipt-core`. Every other service reaches the shared entities (`stores`, `receipts`, `line_items`, `extraction_reviews`) by calling `receipt-api` — `receipt-etl` calls it to write newly extracted data and resolve flagged reviews; `receipt-search`, `receipt-agent`, and `receipt-forecast` call it to read. `receipt-etl` is built first, against `receipt-api`'s OpenAPI spec and a mock server standing in for it until `receipt-api`'s real implementation exists (see `docs/master-plan.md` Section 5).
 
 ## Design principles that shape any related work
 
@@ -40,7 +40,8 @@ Data flow: `receipt-etl` writes into the shared entities (`stores`, `receipts`, 
 - **Each of the six repos solves a distinct problem** (data engineering / API design / IR / agent routing / forecasting / infra) — if two end up doing similar work, one is scoped wrong.
 - **Every repo documents what it does NOT do**, as explicitly as what it does.
 - **The shared schema is a contract**: since P2–P6 all depend on what `receipt-core` produces, changes to it are cross-cutting.
-- **Privacy is part of the design, not an afterthought**: source photos are the author's real purchase history. `receipt-etl` redacts personal details (names, card numbers, exact addresses) before data reaches storage; all sample/seed data across repos is synthetic or redacted.
+- **`receipt-api` is the only writer to `receipt-core`.** No other service, including `receipt-etl`, connects to the database directly.
+- **Privacy is data minimization, not redaction.** Source photos are the author's real purchase history, but the database is private and never published. `receipt-core`'s schema defines exactly what gets persisted (required/common/rare tiers, rare fields in a structured `extras` field); `receipt-etl` extracts only what the schema defines, so there's nothing extra to redact afterward. Public sample/seed data across repos is synthetic (Faker-generated), not redacted real data.
 - **Accuracy is reported as a number**: `receipt-etl` tracks percent auto-extracted vs. flagged for manual review; `receipt-agent` is checked against a ~30-question eval set; `receipt-forecast` uses a backtest against held-out recent months.
 
 ## Working in this repo specifically
