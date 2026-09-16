@@ -1,7 +1,7 @@
 {
-  "name": "receipt-intelligence-platform",
+  "name": "vela",
   "version": "1.0.0",
-  "description": "Docs-only hub repo for the Receipt Intelligence Platform — system plan and architecture diagram.",
+  "description": "Docs-only hub repo for Vela (Receipt Intelligence Platform) — system plan and architecture diagram.",
   "private": true,
   "scripts": {
     "lint": "markdownlint README.md CLAUDE.md docs/*.md",
@@ -17,15 +17,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/devdesiignn/receipt-intelligence-platform.git"
+    "url": "git+https://github.com/devdesiignn/vela.git"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/devdesiignn/receipt-intelligence-platform/issues"
+    "url": "https://github.com/devdesiignn/vela/issues"
   },
-  "homepage": "https://github.com/devdesiignn/receipt-intelligence-platform#readme",
+  "homepage": "https://github.com/devdesiignn/vela#readme",
   "devDependencies": {
     "husky": "^9.1.7",
     "lint-staged": "^17.5.1",
